@@ -11,8 +11,13 @@ const search = require("./models/search");
 const app = express();
 const Bing = require('node-bing-api')({accKey:'508bb882ec9148f9934543cc9aa76265'});
 
+const PORT = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
 app.use(cors());
+
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost');
+
 
 var api = '/:searchString(*)';
 
@@ -65,6 +70,6 @@ app.get(api, (req, res, next) => {
 
 
 
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(PORT, ()=>{
     console.log('Server is up!');
 });
