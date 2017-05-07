@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost');
+// mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost');
 
 
 var api = '/:searchString(*)';
