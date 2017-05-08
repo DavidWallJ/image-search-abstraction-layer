@@ -21,22 +21,22 @@ app.use(cors());
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/bingapp');
 
 
-const api = '/:searchString(*)';
 
-app.get(api, (req, res, next) => {
+
+app.get('/:searchString(*)', (req, res, next) => {
     var skip;
     var offset;
     var {searchString} = req.params;
 
 
     // for pagination
-    if(req.query.offset){
+    if (req.query.offset) {
         offset = req.query.offset;
     } else {
         offset = 10;
     }
 
-    if(req.query.skip){
+    if (req.query.skip) {
         skip = req.query.skip;
     } else {
         skip = 0;
@@ -48,14 +48,15 @@ app.get(api, (req, res, next) => {
         searchDate: new Date()
     });
 
-    console.log(data);
 
-    data.save(err => {
-        if(err) {
-            next(err);
-            res.send('Error saving to database');
-        }
-    });
+    if (data.searchVal !== "favicon.ico") {
+        data.save(err => {
+            if (err) {
+                next(err);
+                res.send('Error saving to database');
+            }
+        });
+    }
 
 
     // get bing results
@@ -77,22 +78,21 @@ app.get(api, (req, res, next) => {
 
         res.json(bingData);
     });
+
+
+
+
+
 });
 
-// return res.json({url: urlToShorten});
+// display resent search terms
 
-
-// Bing.images("Ninja Turtles", {
-//     top: 2,   // Number of results (max 50)
-//     skip: 3    // Skip first 3 result
-// }, function(error, res, body){
-//     app.get("/", function (req, res) {
-//
-//         res.json(body);
-//
-//     });
-// });
-
+search.find({})
+    .then((searchTerms) => {
+        for(var i = 0; i < searchTerms.length; i++) {
+            console.log(searchTerms[i].searchVal);
+        }
+    });
 
 app.listen(PORT, () => {
     console.log('Server is up!');
