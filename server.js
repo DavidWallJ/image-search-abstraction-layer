@@ -21,6 +21,24 @@ app.use(cors());
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/bingapp');
 
 
+// get search history from mongodb (local or heroku)
+
+app.get('/searchHistory', (req, res, next) => {
+    var searchTermsArray = [];
+    search.find({})
+        .then((searchTerms) => {
+            for (var i = 0; i < searchTerms.length; i++) {
+                searchTermsArray.push(searchTerms[i].searchVal);
+            }
+        }).then(() => {
+        res.json(searchTermsArray);
+    }).catch(function () {
+        console.log("Error adding search history.");
+        next();
+    });
+});
+
+
 
 app.get('/:searchString(*)', (req, res, next) => {
     var skip;
@@ -75,19 +93,19 @@ app.get('/:searchString(*)', (req, res, next) => {
             });
         }
 
-        var searchTermsArray = [];
-        search.find({})
-            .then((searchTerms) => {
-                for (var i = 0; i < searchTerms.length; i++) {
-                    searchTermsArray.push(searchTerms[i].searchVal);
-                }
-            }).then(() => {
-            bingData[bingData.length] = searchTermsArray;
-            res.json(bingData);
-        }).catch(function () {
-            console.log("Error adding search history.");
-        });
-
+        // var searchTermsArray = [];
+        // search.find({})
+        //     .then((searchTerms) => {
+        //         for (var i = 0; i < searchTerms.length; i++) {
+        //             searchTermsArray.push(searchTerms[i].searchVal);
+        //         }
+        //     }).then(() => {
+        //     bingData[bingData.length] = searchTermsArray;
+        //     res.json(bingData);
+        // }).catch(function () {
+        //     console.log("Error adding search history.");
+        // });
+        res.json(bingData);
     });
 
 });
