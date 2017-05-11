@@ -22,7 +22,6 @@ mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/bingapp');
 
 
 
-
 app.get('/:searchString(*)', (req, res, next) => {
     var skip;
     var offset;
@@ -76,23 +75,26 @@ app.get('/:searchString(*)', (req, res, next) => {
             });
         }
 
-        res.json(bingData);
+        var searchTermsArray = [];
+        search.find({})
+            .then((searchTerms) => {
+                for (var i = 0; i < searchTerms.length; i++) {
+                    searchTermsArray.push(searchTerms[i].searchVal);
+                }
+            }).then(() => {
+            bingData[bingData.length] = searchTermsArray;
+            res.json(bingData);
+        }).catch(function () {
+            console.log("Error adding search history.");
+        });
+
     });
-
-
-
-
 
 });
 
 // display resent search terms
 
-search.find({})
-    .then((searchTerms) => {
-        for(var i = 0; i < searchTerms.length; i++) {
-            console.log(searchTerms[i].searchVal);
-        }
-    });
+
 
 app.listen(PORT, () => {
     console.log('Server is up!');
