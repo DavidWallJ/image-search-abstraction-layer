@@ -89,22 +89,11 @@ app.get('/:searchString(*)', (req, res, next) => {
                 url: body.value[i].webSearchUrl,
                 snippet: body.value[i].name,
                 thumbnail: body.value[i].thumbnailUrl,
-                context: body.value[i].hostPageDisplayUrl
+                context: body.value[i].hostPageDisplayUrl,
+                totalEstimatedItems: body.totalEstimatedMatches
             });
         }
 
-        // var searchTermsArray = [];
-        // search.find({})
-        //     .then((searchTerms) => {
-        //         for (var i = 0; i < searchTerms.length; i++) {
-        //             searchTermsArray.push(searchTerms[i].searchVal);
-        //         }
-        //     }).then(() => {
-        //     bingData[bingData.length] = searchTermsArray;
-        //     res.json(bingData);
-        // }).catch(function () {
-        //     console.log("Error adding search history.");
-        // });
         res.json(bingData);
     });
 
