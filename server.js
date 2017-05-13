@@ -50,7 +50,7 @@ app.get('/:searchString(*)', (req, res, next) => {
     if (req.query.offset) {
         offset = req.query.offset;
     } else {
-        offset = 10;
+        offset = 8;
     }
 
     if (req.query.skip) {
